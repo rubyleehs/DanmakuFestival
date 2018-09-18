@@ -1,0 +1,32 @@
+ + Generation Fields Values
+
+-spawnerMasterPatternCount
+Number of diffrent patterns an Enemy Danmaku may have
+
+-spawnerMasterPatternRadius
+Radius from center SpawnerPattern is able to be from SpawnMasterPattern position
+
+-spawnerPatternCount
+Number of SpawnerPattern the SpawnMasterPattern haves.
+
+-spawnerMasterAngularHalfSpread
+Half of the angular diffrence between the two furthest SpawnerPattern a SpawnMasterPattern has.
+
+-spawnerMasterPatternRotSpeed
+angular speed of SpawnMasterPattern. Doesn't affect SpawnerPattern relative pos/rot to SpawnMasterPattern.
+
+-spawnerPatternRotSpeed
+angular speed of SpawnPattern. Affects SpawnerPattern relative pos/rot to SpawnMasterPattern
+
+-bulletFamilySpawnMovementKeyPointsCount
+number of key points the bezier curve the BulletFamilySpawner follows
+
+-bulletFamilySpawnMovementKeyPointsReach;
+radius around the SpawnerPattern in which key points can be chosen.
+
+-bulletFamilySpawnMovementCyclePeriod;
+time it takes for BulletFamilySpawner to reach the end of the bezier curve it is following.
+
+-bulletFamilySpawnerSpawnCycleInterval
+time inbetween spawns of BulletFamilySpawner by a SpawnerPattern.
+

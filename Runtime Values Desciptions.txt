@@ -1,0 +1,26 @@
+ + SpawnerMasterPattern Runtime Values
+
+-curSpawnerMasterPatternRot
+SpawnerMasterPattern current local rotation which moves all associated SpawnerPattern
+
+-curSpawnerIndividualPatternRot
+blanket add on rotation applied to all SpawnerPattern
+
+-seperationBetweenSpawnerPatterns
+angular distance between 2 closest SpawnerPattern
+
+-bulletFamilySpawnerStartTime
+ratio of each BulletFamilySpawner progress through their bezier path
+
+-spawnerPatternPos
+the base local position of each individual SpawnerPattern, unaffected by effects and add ons.
+
+-spawnerPatternRot 
+the base local rotation of each individual SpawnerPattern, unaffected by effects and add ons.
+
+
+
+ + BulletFamilySpawner Runtime Values
+
+-startTime
+game time the BulletFamilySpawner was activated
