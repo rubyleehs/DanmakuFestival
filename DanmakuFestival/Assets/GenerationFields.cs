@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerationFields : MonoBehaviour {
+[System.Serializable]
+public class GenerationFields {
+
+    [Header("General")]
+    public GameObject bulletFamilySpawnerGO;
+    public GameObject spawnerMasterPatternGO;
 
     [Header("EnemyAi")]
     public Vector2Int spawnerMasterPatternCount;

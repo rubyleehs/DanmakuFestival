@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class EnemyAi : MonoBehaviour {
 
-    public GameObject spawnerMasterPattern;
-
     private int spawnerMasterPatternCount;
 
     public void Start()
     {
-        RandomizeStats(); 
+        RandomizeStats();
+        for (int i = 0; i < spawnerMasterPatternCount; i++)
+        {
+            Instantiate(GameManager.generationFields.spawnerMasterPatternGO,this.transform.position,Quaternion.identity,this.transform);
+        }
     }
 
     public void RandomizeStats() //Only EnemyAI RandomizeStats() has to be in Start()

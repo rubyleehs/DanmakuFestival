@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathDrawer : VectorStuff {
+public class PathDrawer : MathfExtras {
 
     public Transform lineDrawer;
     public Vector2 secondaryRads;

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletFamilySpawner : MonoBehaviour { //if possble, nothing in Start() or Awake()
+public class BulletFamilySpawner : MonoBehaviour
+{ //if possble, nothing in Start() or Awake()
 
-    [HideInInspector]
-    public float startTime;
+    public void SummonBulletFamily(float rotation)//rot = diff in last frame pos and cur frame pos + addon
+    {
 
+    }
 
 }
