@@ -222,16 +222,16 @@ MonoBehaviour:
       type: 2}
     spawnerMasterPatternGO: {fileID: 1109586396011344, guid: 726005b763c85e842a07c9643967996d,
       type: 2}
-    spawnerMasterPatternCount: {x: 1, y: 1}
-    spawnerMasterPatternRadius: {x: 5, y: 5}
-    spawnerPatternCount: {x: 5, y: 5}
-    spawnerMasterAngularHalfSpread: {x: 45, y: 45}
-    spawnerMasterPatternRotSpeed: {x: 90, y: 90}
-    spawnerPatternRotSpeed: {x: 45, y: 45}
-    bulletFamilySpawnMovementKeyPointsCount: {x: 1, y: 1}
-    bulletFamilySpawnMovementKeyPointsReach: {x: 5, y: 5}
-    bulletFamilySpawnMovementCyclePeriod: {x: 10, y: 10}
-    bulletFamilySpawnerSpawnCycleInterval: {x: 4, y: 4}
+    spawnerMasterPatternCount: {x: 2, y: 6}
+    spawnerMasterPatternRadius: {x: 2, y: 4}
+    spawnerPatternCount: {x: 4, y: 8}
+    spawnerMasterAngularHalfSpread: {x: 45, y: 180}
+    spawnerMasterPatternRotSpeed: {x: -180, y: 180}
+    spawnerPatternRotSpeed: {x: -180, y: 180}
+    bulletFamilySpawnMovementKeyPointsCount: {x: 1, y: 6}
+    bulletFamilySpawnMovementKeyPointsReach: {x: 1, y: 8}
+    bulletFamilySpawnMovementCyclePeriod: {x: 2, y: 10}
+    bulletFamilySpawnerSpawnCycleInterval: {x: 2, y: 10}
 --- !u!4 &899936669
 Transform:
   m_ObjectHideFlags: 0

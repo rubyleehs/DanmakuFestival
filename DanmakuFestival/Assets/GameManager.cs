@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MathfExtras {
 
     public GenerationFields I_generationFields;
     public static GenerationFields generationFields;
 
     public static List<BulletFamilySpawner> availableBulletFamilySpawners = new List<BulletFamilySpawner>();
+
     private void Awake()
     {
         generationFields = I_generationFields;

@@ -22,8 +22,8 @@ public class PathDrawer : MathfExtras {
         primaryRot += primaryRotSpeed * Time.deltaTime;
         secondaryRot += secondaryRotSpeed * Time.deltaTime;
 
-        secondaryOrigin = AlterVector(Vector3.up * primaryRad, primaryRot, 0);
-        lineDrawer.position = this.transform.position + (Vector3)secondaryOrigin + AlterVector(secondaryRads, secondaryRot, 0);
+        secondaryOrigin = AlterVector(Vector3.up * primaryRad, primaryRot);
+        lineDrawer.position = this.transform.position + (Vector3)secondaryOrigin + AlterVector(secondaryRads, secondaryRot);
 	}
 }
 

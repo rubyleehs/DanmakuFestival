@@ -4,9 +4,10 @@ using UnityEngine;
 
 public abstract class MathfExtras : MonoBehaviour
 {
-    public Vector3 AlterVector(Vector3 vector, float angleChange, float magnitudeChange) //works
+    public Vector3 AlterVector(Vector3 vector, float angleChange) //works
     {
-        Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, angleChange), ((vector.magnitude + magnitudeChange) / vector.magnitude) * Vector3.one);
+        if (angleChange == 0) return vector;
+        Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, angleChange), Vector3.one);
         vector = matrix.MultiplyPoint3x4(vector);
         return vector;
     }
