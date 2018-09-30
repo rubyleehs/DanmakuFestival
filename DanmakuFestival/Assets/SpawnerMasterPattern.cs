@@ -15,16 +15,15 @@ public class SpawnerMasterPattern : MathfExtras {
     private float spawnerPatternRotSpeed;
 
     //BulletFamily Spawn movement;
-    private int bulletFamilySpawnMovementKeyPointsCount;
-    private List<Vector3> bulletFamilySpawnMovementKeyPointsPos;
-    private float bulletFamilySpawnMovementCyclePeriod;
+    private int bulletFamilySpawnerMovementKeyPointsCount;
+    private List<Vector3> bulletFamilySpawnerMovementKeyPointsPos;
+    private float bulletFamilySpawnerMovementCyclePeriod;
     private float bulletFamilySpawnerSpawnCycleInterval;
     //private int bulletFamilySpawnMovementType = 0;
 
     //==========Runtime Values==========
 
     //Master Stats
-    //private List<IEnumerator> bulletFamilySpawnerMovementHandlers;
     private float curSpawnerMasterPatternRot = 0;
     private float curSpawnerIndividualPatternRot = 0;
     private float seperationBetweenSpawnerPatterns;
@@ -35,7 +34,16 @@ public class SpawnerMasterPattern : MathfExtras {
     private List<Vector3> spawnerPatternPos;
     private List<float> spawnerPatternRot;
 
-    //==================================
+    //==========Bullet Family Values==========
+    //Bullet Family Spawning
+    private float bulletFamilySpawnInterval;
+
+    //Bullet Spawning
+    private int bulletFamilyBulletCount;
+    private float bulletFamilyBulletAngularHalfSpread;
+    private float bulletFamilyBulletSpawnRadius;
+    //========================================
+
     public void Awake()
     {
         RandomizeStartValues();
@@ -54,14 +62,24 @@ public class SpawnerMasterPattern : MathfExtras {
         spawnerPatternRotSpeed = Random.Range(GameManager.generationFields.spawnerPatternRotSpeed.x, GameManager.generationFields.spawnerPatternRotSpeed.y);
 
         //BulletFamily Spawn movement;
-        bulletFamilySpawnMovementKeyPointsCount = Random.Range(GameManager.generationFields.bulletFamilySpawnMovementKeyPointsCount.x, GameManager.generationFields.bulletFamilySpawnMovementKeyPointsCount.y + 1);
-        bulletFamilySpawnMovementKeyPointsPos = new List<Vector3>();
-        for (int i = 0; i < bulletFamilySpawnMovementKeyPointsCount; i++)
+        bulletFamilySpawnerMovementKeyPointsCount = Random.Range(GameManager.generationFields.bulletFamilySpawnerMovementKeyPointsCount.x, GameManager.generationFields.bulletFamilySpawnerMovementKeyPointsCount.y + 1);
+        bulletFamilySpawnerMovementKeyPointsPos = new List<Vector3>();
+        for (int i = 0; i < bulletFamilySpawnerMovementKeyPointsCount; i++)
         {
-            bulletFamilySpawnMovementKeyPointsPos.Add(AlterVector(Vector2.up * Random.Range(GameManager.generationFields.bulletFamilySpawnMovementKeyPointsReach.x, GameManager.generationFields.bulletFamilySpawnMovementKeyPointsReach.y),Random.Range(0,360)));
+            bulletFamilySpawnerMovementKeyPointsPos.Add(AlterVector(Vector2.up * Random.Range(GameManager.generationFields.bulletFamilySpawnerMovementKeyPointsReach.x, GameManager.generationFields.bulletFamilySpawnerMovementKeyPointsReach.y), Random.Range(0, 360)));
         }
-        bulletFamilySpawnMovementCyclePeriod = Random.Range(GameManager.generationFields.bulletFamilySpawnMovementCyclePeriod.x, GameManager.generationFields.bulletFamilySpawnMovementCyclePeriod.y);
+        bulletFamilySpawnerMovementCyclePeriod = Random.Range(GameManager.generationFields.bulletFamilySpawnerMovementCyclePeriod.x, GameManager.generationFields.bulletFamilySpawnerMovementCyclePeriod.y);
         bulletFamilySpawnerSpawnCycleInterval = Random.Range(GameManager.generationFields.bulletFamilySpawnerSpawnCycleInterval.x, GameManager.generationFields.bulletFamilySpawnerSpawnCycleInterval.y);
+
+        //BulletFamilySpawning
+        bulletFamilySpawnInterval = Random.Range(GameManager.generationFields.bulletFamilySpawnInterval.x, GameManager.generationFields.bulletFamilySpawnInterval.y);
+
+
+        //BulletFamily Bullet Spawning
+        bulletFamilyBulletCount = Random.Range(GameManager.generationFields.bulletFamilyBulletCount.x, GameManager.generationFields.bulletFamilyBulletCount.y + 1);
+        bulletFamilyBulletAngularHalfSpread = Random.Range(GameManager.generationFields.bulletFamilyBulletAngularHalfSpread.x, GameManager.generationFields.bulletFamilyBulletAngularHalfSpread.y);
+        bulletFamilyBulletSpawnRadius = Random.Range(GameManager.generationFields.bulletFamilyBulletSpawnRadius.x, GameManager.generationFields.bulletFamilyBulletSpawnRadius.y);
+
     }
 
     public void SetupRuntimeValues()//needs to be called everytime Start Values are changed;
@@ -101,23 +119,31 @@ public class SpawnerMasterPattern : MathfExtras {
         for (int i = 0; i < spawnerPatternCount; i++)
         {
             _bfsList.Add(GameManager.GetBulletFamilySpawner());
-            _bfsList[i].transform.localPosition = spawnerPatternPos[i] + AlterVector(bulletFamilySpawnMovementKeyPointsPos[0], spawnerPatternRot[i]);
+            AssignBFSStartValues(_bfsList[i]);
+            _bfsList[i].SetupRuntimeValues();
+            _bfsList[i].transform.parent = this.transform;
+            _bfsList[i].transform.localPosition = spawnerPatternPos[i] + AlterVector(bulletFamilySpawnerMovementKeyPointsPos[0], spawnerPatternRot[i]);
         }
         float _handlingStartTime = Time.time;
         float _progress = 0;
-        Vector3 _bfsBaseLocalPos = bulletFamilySpawnMovementKeyPointsPos[0];
-        Vector3 _previousBFSBaseLocalLot = bulletFamilySpawnMovementKeyPointsPos[0];
+        Vector3 _bfsBaseLocalPos = bulletFamilySpawnerMovementKeyPointsPos[0];
+        Vector3 _previousBFSBaseLocalLot = bulletFamilySpawnerMovementKeyPointsPos[0];
         //float _bfsBaseRot = Vector3.SignedAngle(Vector3.up, AlterVector(bulletFamilySpawnMovementKeyPointsPos[0], spawnerPatternRot[0]),Vector3.forward);
-        float _bfsInfluencedRot = 0;
+        float _bfsInfluencedRot = 0;//Rot influnced by bezier path
         while (_progress <= 1)
         {
-            _progress = (Time.time - _handlingStartTime) / bulletFamilySpawnMovementCyclePeriod;
-            _bfsBaseLocalPos = GetBezierCurvePoint(bulletFamilySpawnMovementKeyPointsPos, _progress);
+            _progress = (Time.time - _handlingStartTime) / bulletFamilySpawnerMovementCyclePeriod;
+            _bfsBaseLocalPos = GetBezierCurvePoint(bulletFamilySpawnerMovementKeyPointsPos, _progress);
             _bfsInfluencedRot = Vector3.SignedAngle(/*AlterVector(Vector3.up,_bfsBaseRot)*/ Vector3.up, (_bfsBaseLocalPos - _previousBFSBaseLocalLot), Vector3.forward);
             for (int i = 0; i < spawnerPatternCount; i++)
             {
                 _bfsList[i].transform.localPosition = AlterVector(spawnerPatternPos[i], curSpawnerMasterPatternRot) + AlterVector(_bfsBaseLocalPos, spawnerPatternRot[i] + curSpawnerIndividualPatternRot +curSpawnerMasterPatternRot);
                 _bfsList[i].transform.rotation = Quaternion.Euler(Vector3.forward * (_bfsInfluencedRot + spawnerPatternRot[i] + curSpawnerMasterPatternRot));
+                if(Time.time - _bfsList[i].previousBulletFamilySpawnTime > bulletFamilySpawnInterval)
+                {
+                    _bfsList[i].previousBulletFamilySpawnTime = Time.time;//
+                    StartCoroutine(_bfsList[i].GetAndHandleBulletFamily());
+                }
             }
             _previousBFSBaseLocalLot = _bfsList[0].transform.localPosition;
             yield return null;
@@ -129,24 +155,11 @@ public class SpawnerMasterPattern : MathfExtras {
         }
     }
 
-    /*
-    public Vector3 BFSMoveTypeMods(Vector3 _pos, int _index)
+    private void AssignBFSStartValues(BulletFamilySpawner _bfs)
     {
-        Vector3 _moddedPos = _pos;
-        switch (bulletFamilySpawnMovementType)
-        {
-            case 0:
-                break;
-            case 1:
-                if (_index >= spawnerPatternCount * 0.5f) _moddedPos.x = -_moddedPos.x;
-                break;
-            case 2:
-                if (_index%2 == 0) _moddedPos.x = -_moddedPos.x;
-                break;
-            default:
-                break;
-        }
-        return _moddedPos;
+        _bfs.bulletFamilyBulletCount = bulletFamilyBulletCount;
+        _bfs.bulletFamilyBulletAngularHalfSpread = bulletFamilyBulletAngularHalfSpread;
+        _bfs.bulletFamilyBulletSpawnRadius = bulletFamilyBulletSpawnRadius;
+        _bfs.bulletFamilySpawnInterval = bulletFamilySpawnInterval;
     }
-    */
 }

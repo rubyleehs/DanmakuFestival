@@ -8,6 +8,8 @@ public class GenerationFields {
     [Header("General")]
     public GameObject bulletFamilySpawnerGO;
     public GameObject spawnerMasterPatternGO;
+    public GameObject bulletFamilyGO;
+    public GameObject bulletGO;
 
     [Header("EnemyAi")]
     public Vector2Int spawnerMasterPatternCount;
@@ -21,9 +23,17 @@ public class GenerationFields {
     public Vector2 spawnerMasterPatternRotSpeed;
     public Vector2 spawnerPatternRotSpeed;
 
-    [Header("Bullet Family Spawn Movement")]
-    public Vector2Int bulletFamilySpawnMovementKeyPointsCount;
-    public Vector2 bulletFamilySpawnMovementKeyPointsReach; //radius around spawner pattern, not the master spawner pattern
-    public Vector2 bulletFamilySpawnMovementCyclePeriod;
+    [Header("Bullet Family Spawner Movement")]
+    public Vector2Int bulletFamilySpawnerMovementKeyPointsCount;
+    public Vector2 bulletFamilySpawnerMovementKeyPointsReach; //radius around spawner pattern, not the master spawner pattern
+    public Vector2 bulletFamilySpawnerMovementCyclePeriod;
     public Vector2 bulletFamilySpawnerSpawnCycleInterval;
+
+    [Header("Bullet Family Spawning")]
+    public Vector2 bulletFamilySpawnInterval;
+
+    [Header("Bullet Family Bullet Spawning")]
+    public Vector2Int bulletFamilyBulletCount;
+    public Vector2 bulletFamilyBulletAngularHalfSpread;
+    public Vector2 bulletFamilyBulletSpawnRadius;
 }

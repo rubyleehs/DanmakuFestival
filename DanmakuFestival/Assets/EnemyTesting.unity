@@ -171,7 +171,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -222,16 +222,23 @@ MonoBehaviour:
       type: 2}
     spawnerMasterPatternGO: {fileID: 1109586396011344, guid: 726005b763c85e842a07c9643967996d,
       type: 2}
-    spawnerMasterPatternCount: {x: 2, y: 6}
-    spawnerMasterPatternRadius: {x: 2, y: 4}
-    spawnerPatternCount: {x: 4, y: 8}
-    spawnerMasterAngularHalfSpread: {x: 45, y: 180}
-    spawnerMasterPatternRotSpeed: {x: -180, y: 180}
-    spawnerPatternRotSpeed: {x: -180, y: 180}
-    bulletFamilySpawnMovementKeyPointsCount: {x: 1, y: 6}
-    bulletFamilySpawnMovementKeyPointsReach: {x: 1, y: 8}
-    bulletFamilySpawnMovementCyclePeriod: {x: 2, y: 10}
-    bulletFamilySpawnerSpawnCycleInterval: {x: 2, y: 10}
+    bulletFamilyGO: {fileID: 1527006397783286, guid: 68a567238e0a705418f0f0d9d919049d,
+      type: 2}
+    bulletGO: {fileID: 1998397992805528, guid: f5d36e26a2da9dd4fa53720a9303bfc0, type: 2}
+    spawnerMasterPatternCount: {x: 2, y: 3}
+    spawnerMasterPatternRadius: {x: 1, y: 4}
+    spawnerPatternCount: {x: 3, y: 6}
+    spawnerMasterAngularHalfSpread: {x: 180, y: 180}
+    spawnerMasterPatternRotSpeed: {x: -45, y: 45}
+    spawnerPatternRotSpeed: {x: -120, y: 120}
+    bulletFamilySpawnerMovementKeyPointsCount: {x: 1, y: 6}
+    bulletFamilySpawnerMovementKeyPointsReach: {x: 2, y: 6}
+    bulletFamilySpawnerMovementCyclePeriod: {x: 4, y: 8}
+    bulletFamilySpawnerSpawnCycleInterval: {x: 6, y: 8}
+    bulletFamilySpawnInterval: {x: 0.55, y: 2}
+    bulletFamilyBulletCount: {x: 3, y: 4}
+    bulletFamilyBulletAngularHalfSpread: {x: 15, y: 90}
+    bulletFamilyBulletSpawnRadius: {x: 0.5, y: 2}
 --- !u!4 &899936669
 Transform:
   m_ObjectHideFlags: 0
