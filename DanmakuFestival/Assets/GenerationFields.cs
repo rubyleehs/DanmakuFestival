@@ -33,7 +33,7 @@ public class GenerationFields {
     public Vector2 bulletFamilySpawnInterval;
 
     [Header("Bullet Family Bullet Spawning")]
-    public Vector2Int bulletFamilyBulletCount;
-    public Vector2 bulletFamilyBulletAngularHalfSpread;
+    public Vector2Int bulletFamilySideCount;
+    public Vector2Int bulletFamilyBulletPerSideCount;
     public Vector2 bulletFamilyBulletSpawnRadius;
 }

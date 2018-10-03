@@ -39,9 +39,12 @@ public class SpawnerMasterPattern : MathfExtras {
     private float bulletFamilySpawnInterval;
 
     //Bullet Spawning
-    private int bulletFamilyBulletCount;
-    private float bulletFamilyBulletAngularHalfSpread;
-    private float bulletFamilyBulletSpawnRadius;
+    public int bulletFamilySideCount;
+    public int bulletFamilyActiveSideCount;
+    public int bulletFamilySideSkipInterval;//make sure not equal to bulletFamilySideCount;
+    public int bulletFamilyBulletPerSideCount;
+    public float bulletFamilyBulletSpawnRadius;
+
     //========================================
 
     public void Awake()
@@ -74,13 +77,13 @@ public class SpawnerMasterPattern : MathfExtras {
         //BulletFamilySpawning
         bulletFamilySpawnInterval = Random.Range(GameManager.generationFields.bulletFamilySpawnInterval.x, GameManager.generationFields.bulletFamilySpawnInterval.y);
 
-
         //BulletFamily Bullet Spawning
-        bulletFamilyBulletCount = Random.Range(GameManager.generationFields.bulletFamilyBulletCount.x, GameManager.generationFields.bulletFamilyBulletCount.y + 1);
-        bulletFamilyBulletAngularHalfSpread = Random.Range(GameManager.generationFields.bulletFamilyBulletAngularHalfSpread.x, GameManager.generationFields.bulletFamilyBulletAngularHalfSpread.y);
-        bulletFamilyBulletSpawnRadius = Random.Range(GameManager.generationFields.bulletFamilyBulletSpawnRadius.x, GameManager.generationFields.bulletFamilyBulletSpawnRadius.y);
-
-    }
+        bulletFamilySideCount = Random.Range(GameManager.generationFields.bulletFamilySideCount.x, GameManager.generationFields.bulletFamilySideCount.y + 1);//
+        bulletFamilyActiveSideCount = Random.Range(1 , bulletFamilySideCount + 1);
+        bulletFamilySideSkipInterval = Random.Range(1, bulletFamilySideCount);
+        bulletFamilyBulletPerSideCount = Random.Range(GameManager.generationFields.bulletFamilyBulletPerSideCount.x, GameManager.generationFields.bulletFamilyBulletPerSideCount.y + 1);
+        bulletFamilyBulletSpawnRadius = Random.Range(GameManager.generationFields.bulletFamilyBulletSpawnRadius.x, GameManager.generationFields.bulletFamilyBulletSpawnRadius.y);//
+}
 
     public void SetupRuntimeValues()//needs to be called everytime Start Values are changed;
     {
@@ -157,8 +160,10 @@ public class SpawnerMasterPattern : MathfExtras {
 
     private void AssignBFSStartValues(BulletFamilySpawner _bfs)
     {
-        _bfs.bulletFamilyBulletCount = bulletFamilyBulletCount;
-        _bfs.bulletFamilyBulletAngularHalfSpread = bulletFamilyBulletAngularHalfSpread;
+        _bfs.bulletFamilySideCount = bulletFamilySideCount;
+        _bfs.bulletFamilyActiveSideCount = bulletFamilyActiveSideCount;
+        _bfs.bulletFamilySideSkipInterval = bulletFamilySideSkipInterval;
+        _bfs.bulletFamilyBulletPerSideCount = bulletFamilyBulletPerSideCount;
         _bfs.bulletFamilyBulletSpawnRadius = bulletFamilyBulletSpawnRadius;
         _bfs.bulletFamilySpawnInterval = bulletFamilySpawnInterval;
     }

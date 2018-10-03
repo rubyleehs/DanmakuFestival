@@ -235,9 +235,9 @@ MonoBehaviour:
     bulletFamilySpawnerMovementKeyPointsReach: {x: 2, y: 6}
     bulletFamilySpawnerMovementCyclePeriod: {x: 4, y: 8}
     bulletFamilySpawnerSpawnCycleInterval: {x: 6, y: 8}
-    bulletFamilySpawnInterval: {x: 0.55, y: 2}
-    bulletFamilyBulletCount: {x: 3, y: 4}
-    bulletFamilyBulletAngularHalfSpread: {x: 15, y: 90}
+    bulletFamilySpawnInterval: {x: 0.3, y: 2}
+    bulletFamilySideCount: {x: 3, y: 8}
+    bulletFamilyBulletPerSideCount: {x: 3, y: 8}
     bulletFamilyBulletSpawnRadius: {x: 0.5, y: 2}
 --- !u!4 &899936669
 Transform:

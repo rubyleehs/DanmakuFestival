@@ -26,7 +26,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1656896219143334
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,9 +175,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb16779fab1c3047acbed465eff64e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletFamilyBulletCount: 0
-  bulletFamilyAngularHalfSpread: 0
+  bulletFamilySideCount: 0
+  bulletFamilyActiveSideCount: 0
+  bulletFamilySideSkipInterval: 0
+  bulletFamilyBulletPerSideCount: 0
   bulletFamilyBulletSpawnRadius: 0
+  bulletFamilySpawnInterval: 0
+  previousBulletFamilySpawnTime: 0
 --- !u!212 &212307269611065582
 SpriteRenderer:
   m_ObjectHideFlags: 1
