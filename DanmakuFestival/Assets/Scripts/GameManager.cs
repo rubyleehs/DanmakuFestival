@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class GameManager : MathfExtras {
 
-    public GenerationFields I_generationFields;
-    public static GenerationFields generationFields;
+    [HideInInspector]
+    public static float timeScale = 1;
+
+    public float I_squaredGameBoundaryDist;
+    public static float squaredGameBoundaryDist;
+
+    public BHGenerationFields I_bHGenerationFields;
+    public static BHGenerationFields bHGenerationFields;
 
     public static List<BulletFamilySpawner> availableBulletFamilySpawners = new List<BulletFamilySpawner>();
     public static List<BulletFamily> availableBulletFamily = new List<BulletFamily>();
@@ -13,7 +19,8 @@ public class GameManager : MathfExtras {
 
     private void Awake()
     {
-        generationFields = I_generationFields;
+        bHGenerationFields = I_bHGenerationFields;
+        squaredGameBoundaryDist = I_squaredGameBoundaryDist;
     }
 
 
@@ -22,7 +29,7 @@ public class GameManager : MathfExtras {
         BulletFamilySpawner _chosenBFS;
         if (availableBulletFamilySpawners.Count == 0)
         {
-            _chosenBFS = Instantiate(generationFields.bulletFamilySpawnerGO).GetComponent<BulletFamilySpawner>();
+            _chosenBFS = Instantiate(bHGenerationFields.bulletFamilySpawnerGO).GetComponent<BulletFamilySpawner>();
         }
         else
         {
@@ -36,16 +43,16 @@ public class GameManager : MathfExtras {
     public static BulletFamily GetBulletFamily()
     {
         BulletFamily _chosenBF;
-        if (availableBulletFamilySpawners.Count == 0 || true)
+        if (availableBulletFamily.Count == 0 )
         {
-            _chosenBF = Instantiate(generationFields.bulletFamilyGO).GetComponent<BulletFamily>();
+            _chosenBF = Instantiate(bHGenerationFields.bulletFamilyGO).GetComponent<BulletFamily>();
         }
         else
         {
             _chosenBF = availableBulletFamily[0];
             _chosenBF.bullets = new List<Transform>();
             _chosenBF.gameObject.SetActive(true);
-            availableBulletFamilySpawners.RemoveAt(0);
+            availableBulletFamily.RemoveAt(0);
         }
         return _chosenBF;
     }
@@ -55,13 +62,13 @@ public class GameManager : MathfExtras {
         Transform _chosenBullet;
         if (availableBullets.Count == 0 || true)
         {
-            _chosenBullet = Instantiate(generationFields.bulletGO).transform;
+            _chosenBullet = Instantiate(bHGenerationFields.bulletGO).transform;
         }
         else
         {
             _chosenBullet = availableBullets[0];
             _chosenBullet.gameObject.SetActive(true);
-            availableBulletFamilySpawners.RemoveAt(0);
+            availableBullets.RemoveAt(0);
         }
         return _chosenBullet;
     }

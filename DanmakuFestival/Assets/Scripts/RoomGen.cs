@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletFamily : MonoBehaviour {
+public class RoomGen : MonoBehaviour {
 
-    public List<Transform> bullets;
 	// Use this for initialization
 	void Start () {
 		

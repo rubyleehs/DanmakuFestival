@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114370776557851806}
   m_Layer: 0
   m_Name: BulletFamily
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,3 +52,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullets: []
+  bulletMoveStartSpeed: 0
+  bulletAngularMoveStartSpeed: 0
+  bulletMoveAcceleration: 0
+  bulletMoveAccelerationPingPongInterval: 0
+  bulletAngularMoveAcceleration: 0
+  bulletAngularMoveAccelerationPingPongInterval: 0
+  bfMoveStartSpeed: 0
+  bfAngularMoveStartSpeed: 0
+  bfMoveAcceleration: 0
+  bfCompondActionDuration: 0
+  bfCompondRotSpeed: 0
+  bulletFamilyCompoundRotationReadjustment: 0

@@ -11,12 +11,12 @@ public class EnemyAi : MonoBehaviour {
         RandomizeStats();
         for (int i = 0; i < spawnerMasterPatternCount; i++)
         {
-            Instantiate(GameManager.generationFields.spawnerMasterPatternGO,this.transform.position,Quaternion.identity,this.transform);
+            Instantiate(GameManager.bHGenerationFields.spawnerMasterPatternGO,this.transform.position,Quaternion.identity,this.transform);
         }
     }
 
     public void RandomizeStats() //Only EnemyAI RandomizeStats() has to be in Start()
     {
-        spawnerMasterPatternCount = Random.Range(GameManager.generationFields.spawnerMasterPatternCount.x, GameManager.generationFields.spawnerMasterPatternCount.y);
+        spawnerMasterPatternCount = Random.Range(GameManager.bHGenerationFields.spawnerMasterPatternCount.x, GameManager.bHGenerationFields.spawnerMasterPatternCount.y);
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BulletFamilySpawner : MathfExtras
 {
+    public SpawnerMasterPattern spawnerMasterPattern;
     //==========Start Values==========
 
     //Bullet Spawning
@@ -17,11 +18,13 @@ public class BulletFamilySpawner : MathfExtras
 
     //==========Runtime Values==========
 
-    //Bullet Family stats
+    //BulletFamily stats
     private float bulletFamilyEdgeSeperation;
     private List<Vector3> bulletFamilyEdgePos;
     private List<Vector2Int> bulletFamilySideLinePointsIndex;
-    public float previousBulletFamilySpawnTime;//accesed by spawnerMaster
+    public float timeSincePreviousBulletFamily;//accesed by spawnerMaster
+
+    private List<int> bulletFamilyEdgeShiftIndex;
 
     //Individual Bullets stats
     private List<float> bulletSpawnRot;
@@ -30,7 +33,7 @@ public class BulletFamilySpawner : MathfExtras
 
     public void SetupRuntimeValues()//should be calculated in master then immediately assigned
     {
-        previousBulletFamilySpawnTime = Time.time;
+        timeSincePreviousBulletFamily = 0;
         UpdateBulletSpawnPointStats();
     }
 
@@ -39,14 +42,14 @@ public class BulletFamilySpawner : MathfExtras
         bulletFamilySideLinePointsIndex = new List<Vector2Int>();
         int _startIndex = 0;
         int _endIndex = 0;
-        int _indexShiftCount = 0;
+        bulletFamilyEdgeShiftIndex = new List<int>();
         while(bulletFamilySideLinePointsIndex.Count < bulletFamilySideCount)
         {
             _endIndex= (_startIndex + bulletFamilySideSkipInterval) % bulletFamilySideCount;
-            if (_endIndex == _indexShiftCount) {
+            if (_endIndex == bulletFamilyEdgeShiftIndex.Count) {
                 bulletFamilySideLinePointsIndex.Add(new Vector2Int(_startIndex, _endIndex));
-                _indexShiftCount++;
-                _startIndex = _indexShiftCount;
+                bulletFamilyEdgeShiftIndex.Add(bulletFamilySideLinePointsIndex.Count -1);
+                _startIndex = bulletFamilyEdgeShiftIndex.Count;
             }
             else
             {
@@ -78,7 +81,15 @@ public class BulletFamilySpawner : MathfExtras
         float cal_bulletSpawnRot = 0;
         for (int _side = 0; _side < bulletFamilyActiveSideCount; _side++)
         {
-            cal_bulletSpawnRot = _side * bulletFamilyEdgeSeperation *bulletFamilySideSkipInterval;
+            cal_bulletSpawnRot = _side * bulletFamilyEdgeSeperation * bulletFamilySideSkipInterval;// +bulletFamilyCompoundRotationReadjustment;
+            for (int i = 0; i < bulletFamilyEdgeShiftIndex.Count; i++)
+            {
+                if(bulletFamilyEdgeShiftIndex[i] > _side + 1)
+                {
+                    cal_bulletSpawnRot += i * bulletFamilyEdgeSeperation;
+                    break;
+                }
+            }
             if (bulletFamilyBulletPerSideCount % 2 == 1) cal_bulletSpawnRot += bulletFamilyEdgeSeperation * bulletFamilySideSkipInterval * 0.5f;
             for (int _sideBullet = 0; _sideBullet < bulletFamilyBulletPerSideCount; _sideBullet++)
             { 
@@ -93,16 +104,17 @@ public class BulletFamilySpawner : MathfExtras
             for (int i = 0; i < bulletSpawnRot.Count; i++)
             {
                 if ((i % bulletFamilyBulletPerSideCount) >= bulletFamilyBulletPerSideCount * 0.5f) bulletSpawnRot[i] += bulletFamilyEdgeSeperation * bulletFamilySideSkipInterval;
-                //else bulletSpawnRot[i] -= bulletFamilyEdgeSeperation * bulletFamilySideSkipInterval * 0.5f;
             }
         }
     }
 
-    public IEnumerator GetAndHandleBulletFamily()
+    public BulletFamily GetAndSetupBulletFamily()
     {
         BulletFamily _bulletFamily = GameManager.GetBulletFamily();
         _bulletFamily.transform.position = this.transform.position;
         _bulletFamily.transform.rotation = this.transform.rotation;
+        _bulletFamily.timeSinceCompoundStart = -Mathf.PI;
+        _bulletFamily.timeSincebfBulletMoveIntervalStart = -Mathf.PI;
         for (int i = 0; i < bulletSpawnPos.Count; i++)
         {
             Transform _bullet = GameManager.GetBullet();
@@ -111,6 +123,7 @@ public class BulletFamilySpawner : MathfExtras
             _bullet.localRotation = Quaternion.Euler(Vector3.forward * bulletSpawnRot[i]);
             _bulletFamily.bullets.Add(_bullet);
         }
-        yield return null;
+
+        return _bulletFamily;
     }
 }

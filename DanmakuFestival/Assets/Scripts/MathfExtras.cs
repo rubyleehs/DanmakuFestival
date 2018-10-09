@@ -6,7 +6,7 @@ public abstract class MathfExtras : MonoBehaviour
 {
     public Vector3 AlterVector(Vector3 vector, float angleChange) //works
     {
-        if (angleChange == 0) return vector;
+        if (angleChange == 0 || angleChange == float.NaN) return vector;
         Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, angleChange), Vector3.one);
         vector = matrix.MultiplyPoint3x4(vector);
         return vector;
