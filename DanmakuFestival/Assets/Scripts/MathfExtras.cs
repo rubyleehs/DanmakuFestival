@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class MathfExtras : MonoBehaviour
 {
+    public readonly static int[] primes = new int[10] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 };
+
     public Vector3 AlterVector(Vector3 vector, float angleChange) //works
     {
         if (angleChange == 0 || angleChange == float.NaN) return vector;
@@ -45,5 +47,14 @@ public abstract class MathfExtras : MonoBehaviour
 
         }
         return _finalPoints[0];
+    }
+
+    public int RandomValue(Vector2Int _range)
+    {
+        return Random.Range(_range.x, _range.y +1);
+    }
+    public float RandomValue(Vector2 _range)
+    {
+        return Random.Range(_range.x, _range.y);
     }
 }

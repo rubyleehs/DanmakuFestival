@@ -175,18 +175,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb16779fab1c3047acbed465eff64e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnerMasterPattern: {fileID: 0}
   bulletFamilySideCount: 0
   bulletFamilyActiveSideCount: 0
   bulletFamilySideSkipInterval: 0
   bulletFamilyBulletPerSideCount: 0
   bulletFamilyBulletSpawnRadius: 0
   bulletFamilySpawnInterval: 0
-  bfMoveStartSpeed: 0
-  bfAngularMoveStartSpeed: 0
-  bfMoveAcceleration: 0
-  bfCompondActionDuration: 0
-  bfCompondRotSpeed: 0
-  previousBulletFamilySpawnTime: 0
+  timeSincePreviousBulletFamily: 0
 --- !u!212 &212307269611065582
 SpriteRenderer:
   m_ObjectHideFlags: 1

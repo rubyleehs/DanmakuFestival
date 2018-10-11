@@ -161,7 +161,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 180
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -184,9 +184,139 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 691184692}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 170, y: 170, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &728343888
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 728343890}
+  - component: {fileID: 728343889}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &728343889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 728343888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72bbfcea375e4a843b260bad5f3778f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  I_squaredGameBoundaryDist: 0
+  I_bHGenerationFields:
+    bulletFamilySpawnerGO: {fileID: 0}
+    spawnerMasterPatternGO: {fileID: 0}
+    bulletFamilyGO: {fileID: 0}
+    bulletGO: {fileID: 0}
+    spawnerMasterPatternCount: {x: 0, y: 0}
+    spawnerMasterPatternRadius: {x: 0, y: 0}
+    spawnerPatternCount: {x: 0, y: 0}
+    spawnerMasterAngularHalfSpread: {x: 0, y: 0}
+    spawnerMasterPatternRotSpeed: {x: 0, y: 0}
+    spawnerPatternRotSpeed: {x: 0, y: 0}
+    bulletFamilySpawnerMovementKeyPointsCount: {x: 0, y: 0}
+    bulletFamilySpawnerMovementKeyPointsReach: {x: 0, y: 0}
+    bulletFamilySpawnerMovementCyclePeriod: {x: 0, y: 0}
+    bulletFamilySpawnerSpawnCycleInterval: {x: 0, y: 0}
+    bulletFamilySpawnInterval: {x: 0, y: 0}
+    chanceOfCompoundBullets: 0
+    minActiveBFSpawnerSidesForCompoundRot: 0
+    bfMoveStartSpeed: {x: 0, y: 0}
+    bfAngularMoveStartSpeed: {x: 0, y: 0}
+    bfMoveAcceleration: {x: 0, y: 0}
+    bfCompondActionDuration: {x: 0, y: 0}
+    bfCompondRotSpeed: {x: 0, y: 0}
+    bulletFamilySideCount: {x: 0, y: 0}
+    bulletFamilyBulletPerSideCount: {x: 0, y: 0}
+    bulletFamilyBulletSpawnRadius: {x: 0, y: 0}
+    bulletMoveStartSpeed: {x: 0, y: 0}
+    bulletAngularMoveStartSpeed: {x: 0, y: 0}
+    bulletMoveAcceleration: {x: 0, y: 0}
+    bulletMoveAccelerationPingPongInterval: {x: 0, y: 0}
+    bulletAngularMoveAcceleration: {x: 0, y: 0}
+    bulletAngularMoveAccelerationPingPongInterval: {x: 0, y: 0}
+  I_roomGenerationFields:
+    wallsParentsGO: {fileID: 1211843601643700, guid: 1f82ac2b14bf9234594129d016e2bfc0,
+      type: 2}
+    wallsColumnGO: {fileID: 1789981845933138, guid: e7459bf72655f57468c8332d0a4c361b,
+      type: 2}
+    wallsWallsGO: {fileID: 1119132072409444, guid: 14e51aa7cf6e35544a4846e2c48a0bd4,
+      type: 2}
+    wallsWallsCapGO: {fileID: 1367886645798962, guid: b312e0292cedd474a9e9b6660d616fed,
+      type: 2}
+    wallPortGo: {fileID: 1536374144952166, guid: fabe8c8a04fae91449f5fa7a235e5e96,
+      type: 2}
+    roomScale: 10
+    roomBoundarySize: {x: 11, y: 17}
+    regionOverlap: {x: 3, y: 5}
+    chunkPerRegionCount: {x: 15, y: 30}
+    centerFlipRadius: {x: 6, y: 10}
+    wallDigIterationCount: {x: 1, y: 3}
+--- !u!4 &728343890
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 728343888}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &866423075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 866423077}
+  - component: {fileID: 866423076}
+  m_Layer: 0
+  m_Name: Room
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &866423076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 866423075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df432b151de51948bb9e309a4ee97c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &866423077
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 866423075}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MathfExtras {
+    private static GameManager gameManager;
 
     [HideInInspector]
     public static float timeScale = 1;
@@ -13,14 +14,28 @@ public class GameManager : MathfExtras {
     public BHGenerationFields I_bHGenerationFields;
     public static BHGenerationFields bHGenerationFields;
 
+    public RoomGenerationFields I_roomGenerationFields;
+    public static RoomGenerationFields roomGenerationFields;
+
     public static List<BulletFamilySpawner> availableBulletFamilySpawners = new List<BulletFamilySpawner>();
     public static List<BulletFamily> availableBulletFamily = new List<BulletFamily>();
     public static List<Transform> availableBullets = new List<Transform>();
 
+
     private void Awake()
     {
-        bHGenerationFields = I_bHGenerationFields;
-        squaredGameBoundaryDist = I_squaredGameBoundaryDist;
+        if (gameManager != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            DontDestroyOnLoad(this.gameObject);
+            gameManager = this;
+            bHGenerationFields = I_bHGenerationFields;
+            roomGenerationFields = I_roomGenerationFields;//
+            squaredGameBoundaryDist = I_squaredGameBoundaryDist;
+        }
     }
 
 

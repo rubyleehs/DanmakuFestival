@@ -52,15 +52,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullets: []
-  bulletMoveStartSpeed: 0
-  bulletAngularMoveStartSpeed: 0
   bulletMoveAcceleration: 0
-  bulletMoveAccelerationPingPongInterval: 0
   bulletAngularMoveAcceleration: 0
-  bulletAngularMoveAccelerationPingPongInterval: 0
-  bfMoveStartSpeed: 0
-  bfAngularMoveStartSpeed: 0
   bfMoveAcceleration: 0
-  bfCompondActionDuration: 0
-  bfCompondRotSpeed: 0
   bulletFamilyCompoundRotationReadjustment: 0
+  index: 0
+  bulletMoveSpeed: 0
+  bulletAngularMoveSpeed: 0
+  bfMoveSpeed: 0
+  bfAngularMoveSpeed: 0
+  timeSinceCompoundStart: 0
+  timeSincebfBulletMoveIntervalStart: 0
+  timeSincebfBulletAngularMoveIntervalStart: 0
