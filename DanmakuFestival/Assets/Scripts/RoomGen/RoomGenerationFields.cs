@@ -10,7 +10,8 @@ public class RoomGenerationFields{
     public GameObject wallsColumnGO;
     public GameObject wallsWallsGO;
     public GameObject wallsWallsCapGO;
-    public GameObject wallPortGo;
+    public GameObject floorPortGo;
+    public GameObject floorLockDownButtonGO;
 
     public float roomScale;
 

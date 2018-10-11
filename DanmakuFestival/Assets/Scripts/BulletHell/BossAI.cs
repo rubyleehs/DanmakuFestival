@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAi : MonoBehaviour {
+public class BossAI : MonoBehaviour {
 
     private int spawnerMasterPatternCount;
 

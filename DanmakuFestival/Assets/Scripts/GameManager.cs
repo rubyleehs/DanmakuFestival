@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MathfExtras {
     private static GameManager gameManager;
+    public float I_dijkstraUpdateInterval;
+    public static float dijkstraUpdateInterval;
 
     [HideInInspector]
     public static float timeScale = 1;
@@ -32,6 +34,7 @@ public class GameManager : MathfExtras {
         {
             DontDestroyOnLoad(this.gameObject);
             gameManager = this;
+            dijkstraUpdateInterval = I_dijkstraUpdateInterval;
             bHGenerationFields = I_bHGenerationFields;
             roomGenerationFields = I_roomGenerationFields;//
             squaredGameBoundaryDist = I_squaredGameBoundaryDist;

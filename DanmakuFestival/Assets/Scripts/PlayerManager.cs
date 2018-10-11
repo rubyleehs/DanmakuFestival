@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerManager : MathfExtras {
 
+    public static Transform player;
+
     public float playerSpeed;
     [Range(0f,1f)]
     public float playerUnmovingTimeScale;
@@ -19,6 +21,7 @@ public class PlayerManager : MathfExtras {
 
     private void Awake()
     {
+        player = this.transform;
         rb = this.GetComponent<Rigidbody2D>();
     }
     void Update () {
