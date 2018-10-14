@@ -280,6 +280,7 @@ MonoBehaviour:
       type: 2}
     floorLockDownButtonGO: {fileID: 1880757901457614, guid: dc166e2ae8af27d40b61bbf34cab82f3,
       type: 2}
+    numberOfRooms: {x: 0, y: 0}
     roomScale: 10
     roomBoundarySize: {x: 11, y: 17}
     regionOverlap: {x: 3, y: 5}
@@ -287,7 +288,7 @@ MonoBehaviour:
     centerFlipRadius: {x: 6, y: 10}
     wallDigIterationCount: {x: 1, y: 3}
     guardGO: {fileID: 1446823837542236, guid: 41dbf10eafeb3094c8bea3fca0c0c3b7, type: 2}
-    guardCount: {x: 2, y: 3}
+    guardCount: {x: 3, y: 3}
     guardPatrolPathNodeCount: {x: 3, y: 4}
     wallMat: {fileID: 2100000, guid: ac5330c51f6400f46bb4be15f21c3658, type: 2}
     wallCoolColor: {r: 0.22027414, g: 0.8490566, b: 0.7493844, a: 0.78431374}
@@ -308,50 +309,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &866423075
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 866423077}
-  - component: {fileID: 866423076}
-  m_Layer: 0
-  m_Name: Room
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &866423076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 866423075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1df432b151de51948bb9e309a4ee97c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  room: {fileID: 0}
-  IsAlert: 0
-  roomBoundarySize: {x: 0, y: 0}
-  enemyTransforms: []
---- !u!4 &866423077
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 866423075}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1956418407
 Prefab:

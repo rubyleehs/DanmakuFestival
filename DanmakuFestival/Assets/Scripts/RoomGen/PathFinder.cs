@@ -11,14 +11,12 @@ public abstract class PathFinder : MathfExtras {
 
     public Vector2 GetAlertedMovePosition(Vector2Int _curIndex)
     {
-        if (room.roomDijkstraMap == null) return Vector3.zero;
+        if (room.roomMainDijkstraMap == null) return Vector3.zero;
         Vector2Int _targetIndex = _curIndex;
-        int count = 0;
         while (room.roomDijkstraMap[_targetIndex.x, _targetIndex.y] != 0)
         {
-            count++;
             _targetIndex = DijkstraGetLowestAdjacentCell(_curIndex);
-            if (count < 100 && HasDirectLineOFSight(this.transform.position, new Vector2(_targetIndex.x, _targetIndex.y) * GameManager.roomGenerationFields.roomScale + new Vector2(room.transform.position.x, room.transform.position.y), 2.2f))
+            if (room.roomMainDijkstraMap[_targetIndex.x, _targetIndex.y] < room.roomMainDijkstraMap[_curIndex.x, _curIndex.y] && HasDirectLineOFSight(this.transform.position, new Vector2(_targetIndex.x, _targetIndex.y) * GameManager.roomGenerationFields.roomScale + new Vector2(room.transform.position.x, room.transform.position.y), 2.2f))
             {
                 _curIndex = _targetIndex;
             }
@@ -40,38 +38,38 @@ public abstract class PathFinder : MathfExtras {
     {
         int x = _coord.x;
         int y = _coord.y;
-        int lowestValue = 10000;
+        float lowestValue = 10000;
         List<Vector2Int> _lowestAdjCells = new List<Vector2Int>();
 
-        if (room.roomDijkstraMap[_coord.x, _coord.y + 1] < lowestValue && room.roomDijkstraMap[_coord.x, _coord.y + 1] >= 0)
+        if (room.roomMainDijkstraMap[_coord.x, _coord.y + 1] < lowestValue && room.roomMainDijkstraMap[_coord.x, _coord.y + 1] >= 0)
         {
-            lowestValue = room.roomDijkstraMap[_coord.x, _coord.y + 1];
+            lowestValue = room.roomMainDijkstraMap[_coord.x, _coord.y + 1];
         }
-        if (room.roomDijkstraMap[_coord.x, _coord.y - 1] < lowestValue && room.roomDijkstraMap[_coord.x, _coord.y - 1] >= 0)
+        if (room.roomMainDijkstraMap[_coord.x, _coord.y - 1] < lowestValue && room.roomMainDijkstraMap[_coord.x, _coord.y - 1] >= 0)
         {
-            lowestValue = room.roomDijkstraMap[_coord.x, _coord.y - 1];
+            lowestValue = room.roomMainDijkstraMap[_coord.x, _coord.y - 1];
         }
-        if (room.roomDijkstraMap[_coord.x + 1, _coord.y] < lowestValue && room.roomDijkstraMap[_coord.x + 1, _coord.y] >= 0)
+        if (room.roomMainDijkstraMap[_coord.x + 1, _coord.y] < lowestValue && room.roomMainDijkstraMap[_coord.x + 1, _coord.y] >= 0)
         {
-            lowestValue = room.roomDijkstraMap[_coord.x + 1, _coord.y];
+            lowestValue = room.roomMainDijkstraMap[_coord.x + 1, _coord.y];
         }
-        if (room.roomDijkstraMap[_coord.x - 1, _coord.y] < lowestValue && room.roomDijkstraMap[_coord.x - 1, _coord.y] >= 0)
+        if (room.roomMainDijkstraMap[_coord.x - 1, _coord.y] < lowestValue && room.roomMainDijkstraMap[_coord.x - 1, _coord.y] >= 0)
         {
-            lowestValue = room.roomDijkstraMap[_coord.x - 1, _coord.y];
+            lowestValue = room.roomMainDijkstraMap[_coord.x - 1, _coord.y];
         }
-        if (room.roomDijkstraMap[_coord.x, _coord.y + 1] == lowestValue)
+        if (room.roomMainDijkstraMap[_coord.x, _coord.y + 1] == lowestValue)
         {
             _lowestAdjCells.Add(new Vector2Int(_coord.x, _coord.y + 1));
         }
-        if (room.roomDijkstraMap[_coord.x, _coord.y - 1] == lowestValue)
+        if (room.roomMainDijkstraMap[_coord.x, _coord.y - 1] == lowestValue)
         {
             _lowestAdjCells.Add(new Vector2Int(_coord.x, _coord.y - 1));
         }
-        if (room.roomDijkstraMap[_coord.x + 1, _coord.y] == lowestValue)
+        if (room.roomMainDijkstraMap[_coord.x + 1, _coord.y] == lowestValue)
         {
             _lowestAdjCells.Add(new Vector2Int(_coord.x + 1, _coord.y));
         }
-        if (room.roomDijkstraMap[_coord.x - 1, _coord.y] == lowestValue)
+        if (room.roomMainDijkstraMap[_coord.x - 1, _coord.y] == lowestValue)
         {
             _lowestAdjCells.Add(new Vector2Int(_coord.x - 1, _coord.y));
         }

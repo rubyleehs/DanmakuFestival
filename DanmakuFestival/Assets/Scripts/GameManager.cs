@@ -7,6 +7,7 @@ public class GameManager : MathfExtras {
     public float I_dijkstraUpdateInterval;
     public static float dijkstraUpdateInterval;
 
+
     [HideInInspector]
     public static float timeScale = 1;
 

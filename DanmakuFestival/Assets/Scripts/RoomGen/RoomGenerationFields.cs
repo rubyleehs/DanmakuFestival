@@ -13,6 +13,8 @@ public class RoomGenerationFields{
     public GameObject floorPortGo;
     public GameObject floorLockDownButtonGO;
 
+    public Vector2Int numberOfRooms;
+
     public float roomScale;
 
     public Vector2Int roomBoundarySize;

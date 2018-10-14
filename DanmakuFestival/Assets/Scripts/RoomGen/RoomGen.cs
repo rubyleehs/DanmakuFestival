@@ -23,7 +23,7 @@ public class RoomGen : PathFinder {
     public int[,] roomData;
     public int[,] roomDijkstraMap;
     public int[,] roomReverseDijkstraMap;
-    public int[,] roomMainDijkstraMap;
+    public float[,] roomMainDijkstraMap;
 
     private List<Vector3Int> poi;
     private List<Vector2Int> dijkstraPointsToCheck;
@@ -585,9 +585,13 @@ public class RoomGen : PathFinder {
         for (int i = 0; i < enemyTransforms.Count; i++)
         {
             Vector2Int _enemyIndexLot = ToRoomIndexLocation(enemyTransforms[i].position);
-            roomReverseDijkstraMap[_enemyIndexLot.x, _enemyIndexLot.y] = 12;
-            dijkstraPointsToCheck.Add(new Vector2Int(_enemyIndexLot.x, _enemyIndexLot.y));
+            roomReverseDijkstraMap[_enemyIndexLot.x, _enemyIndexLot.y] += 4;
+            dijkstraPointsToCheck.Add(new Vector2Int(_enemyIndexLot.x, _enemyIndexLot.y));//
         }
+        /*
+        Vector2Int _pIndex = ToRoomIndexLocation(PlayerManager.player.position);
+        roomReverseDijkstraMap[_pIndex.x, _pIndex.y] = 3;
+        */
         while (dijkstraPointsToCheck.Count > 0)
         {
             DijkstraReverseFloodToAdjacentCell(dijkstraPointsToCheck[0]);
@@ -627,12 +631,12 @@ public class RoomGen : PathFinder {
 
     private void MergeDijkstraMap()
     {
-        roomMainDijkstraMap = new int[roomBoundarySize.x, roomBoundarySize.y];
+        roomMainDijkstraMap = new float[roomBoundarySize.x, roomBoundarySize.y];
         for (int y = 0; y < roomBoundarySize.y; y++)
         {
             for (int x = 0; x < roomBoundarySize.x; x++)
             {
-                roomMainDijkstraMap[x,y] = roomReverseDijkstraMap[x, y] + roomDijkstraMap[x,y];
+                roomMainDijkstraMap[x,y] = roomReverseDijkstraMap[x, y] * 0.23f + roomDijkstraMap[x,y];
             }
         }
     }

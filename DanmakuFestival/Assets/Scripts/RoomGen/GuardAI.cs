@@ -102,7 +102,7 @@ public class GuardAI : PathFinder {
         room.IsAlert = _status;
         if (_status)
         {
-            //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), false);
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), false);
             for (int i = 0; i < room.enemyTransforms.Count; i++)
             {
                 GLDraw.DrawLine(this.transform.position, room.enemyTransforms[i].position, GameManager.roomGenerationFields.infoColor, 0.15f);
