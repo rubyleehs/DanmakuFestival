@@ -17,6 +17,9 @@ public class PlayerManager : MathfExtras {
     private Vector3 moveDir = Vector3.zero;
     private bool IsShifted = false;
 
+    private Vector2 mousePos;
+    private float playerRot;
+
     private Rigidbody2D rb;
 
     private void Awake()
@@ -28,8 +31,12 @@ public class PlayerManager : MathfExtras {
         inputXAxis = Input.GetAxisRaw("Horizontal");
         inputYAxis = Input.GetAxisRaw("Vertical");
         moveDir = new Vector3(inputXAxis, inputYAxis, 0).normalized * playerSpeed;
-        IsShifted = Input.GetKey(KeyCode.LeftShift);//
-	}
+        IsShifted = Input.GetKey(KeyCode.LeftShift);
+
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        playerRot = GetLookRotAngle(player.position,mousePos);
+
+    }
 
     private void FixedUpdate()
     {
@@ -38,5 +45,7 @@ public class PlayerManager : MathfExtras {
         else GameManager.timeScale = 1f;
 
         rb.MovePosition(this.transform.position + moveDir * Time.fixedDeltaTime * GameManager.timeScale);
+        player.rotation = Quaternion.Euler(Vector3.forward * playerRot);
+
     }
 }

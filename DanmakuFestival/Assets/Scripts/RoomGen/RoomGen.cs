@@ -2,21 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomGen : MathfExtras {
+public class RoomGen : PathFinder {
 
-    public Transform testGuard;
+    public bool IsAlert = false;
+
     //======== Start Values ========
-    private Vector2Int roomBoundarySize;
+    public Vector2Int roomBoundarySize;
     private Vector2Int regionSize;
     private int chunkPerRegionCount;
     private int centerFlipRadius;
     private int wallDigIterationCount;
     private Vector2Int center;
 
+    //Guard Values
+    private int guardCount;
+    private int guardPatrolPathNodeCount;
+
     //========= Runtime Values ========
     private int[,] regionData;
-    private int[,] roomData;
+    public int[,] roomData;
     public int[,] roomDijkstraMap;
+    public int[,] roomReverseDijkstraMap;
+    public int[,] roomMainDijkstraMap;
 
     private List<Vector3Int> poi;
     private List<Vector2Int> dijkstraPointsToCheck;
@@ -24,16 +31,15 @@ public class RoomGen : MathfExtras {
     private Transform[,] visualsTransforms;
     private List<Transform> floorPorts;
     private List<Transform> floorLockDownButtons;
+    public List<Transform> enemyTransforms;
 
     private float timeSinceLastDijkstraUpdate = 0;
 
     private void Start()
     {
+        room = this;
         GenerateNewRoom();
-        PlayerManager.player.position = new Vector3(center.x, center.y, 0) * GameManager.roomGenerationFields.roomScale;
-
-        Vector2Int testPos = GetRandomPOICandidateLocation();
-        testGuard.position = new Vector3(testPos.x, testPos.y, 0) * GameManager.roomGenerationFields.roomScale;
+        EnterRoom();
     }
 
     private void Update()
@@ -42,10 +48,7 @@ public class RoomGen : MathfExtras {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             GenerateNewRoom();
-            PlayerManager.player.position = new Vector3(center.x,center.y,0) * GameManager.roomGenerationFields.roomScale;
-
-            Vector2Int testPos = GetRandomPOICandidateLocation();
-            testGuard.position = new Vector3(testPos.x, testPos.y, 0) * GameManager.roomGenerationFields.roomScale;
+            EnterRoom();
         }
         if (timeSinceLastDijkstraUpdate > GameManager.dijkstraUpdateInterval)
         {
@@ -54,11 +57,19 @@ public class RoomGen : MathfExtras {
             Vector2Int _playerIndexLot = ToRoomIndexLocation(PlayerManager.player.position);
             poi[0] = new Vector3Int(_playerIndexLot.x, _playerIndexLot.y, 0);
             CreateDijkstraMap();
+            CreateReverseDijkstraMap();
+            MergeDijkstraMap();
         }
     }
-
-    private void GenerateNewRoom()
+    private void EnterRoom()
     {
+        PlayerManager.player.position = new Vector3(center.x, center.y, 0) * GameManager.roomGenerationFields.roomScale;
+        Camera.main.transform.position = new Vector3(center.x, center.y, 0) * GameManager.roomGenerationFields.roomScale + Vector3.forward * -10;
+        //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), !IsAlert);
+    }
+    private void GenerateNewRoom()//
+    {
+        ClearEnemies();
         RandomizeStartValues();
         GenerateNewRegion();
         CombineRegionsData();
@@ -71,6 +82,76 @@ public class RoomGen : MathfExtras {
         CreateRoomWallsVisuals();
         CreateFloorPortsVisuals(3);
         CreateFloorLockDownButtonVisuals(1);
+        SummonGuards(guardCount);
+    }
+
+    private void SummonGuards(int _count)
+    {
+        for (int c = 0; c < _count; c++)
+        {
+            List<Vector2Int> _guardPatrolNode = new List<Vector2Int>();
+
+            for (int i = 0; i < guardPatrolPathNodeCount; i++)
+            {
+                _guardPatrolNode.Add(GetRandomEmptyLocation());
+            }
+            _guardPatrolNode.Add(_guardPatrolNode[0]);
+
+            List<Vector2Int>[] _guardPatrolPaths = new List<Vector2Int>[4];
+            _guardPatrolPaths[0] = new List<Vector2Int>();
+            for (int i = 0; i < _guardPatrolNode.Count - 1; i++)
+            {
+                List<Vector2Int> astar = AStarPathFromTo(_guardPatrolNode[i], _guardPatrolNode[i + 1]);
+
+                for (int a = 0; a < astar.Count - 2;)
+                {
+                    if (HasDirectLineOFSight((Vector2)astar[a] * GameManager.roomGenerationFields.roomScale + (Vector2)this.transform.position, (Vector2)astar[a + 2] * GameManager.roomGenerationFields.roomScale + (Vector2)this.transform.position, 3.5f)) astar.RemoveAt(a + 1);
+                    else a++;
+                }
+                _guardPatrolPaths[0].AddRange(astar);
+            }
+
+            _guardPatrolPaths = GetReflectedPaths(_guardPatrolPaths[0]);
+
+            for (int i = 0; i < 4; i++)
+            {
+                GuardAI _guard = Instantiate(GameManager.roomGenerationFields.guardGO, (Vector2)_guardPatrolPaths[i][0] * GameManager.roomGenerationFields.roomScale, Quaternion.identity, this.transform).transform.GetComponent<GuardAI>();
+                ////_guard.patrolIndex = _guardPatrolPaths[i].Count * i / 4;
+                _guard.transform.position = (Vector2)_guardPatrolPaths[i][_guard.patrolIndex] * GameManager.roomGenerationFields.roomScale;
+                _guard.patrolPath = _guardPatrolPaths[i];
+                _guard.room = this;
+                enemyTransforms.Add(_guard.transform);
+            }
+
+        }
+    }
+
+    private List<Vector2Int>[] GetReflectedPaths(List<Vector2Int> _path)
+    {
+        List<Vector2Int>[] _paths = new List<Vector2Int>[4] { new List<Vector2Int>(), new List<Vector2Int>(), new List<Vector2Int>(), new List<Vector2Int>() };
+        Vector2Int[] _reflectedPoints;
+
+        for (int p = 0; p < _path.Count; p++)
+        {
+            _reflectedPoints = GetReflectedPoints(_path[p]);
+            for (int i = 0; i < 4; i++)
+            {
+                _paths[i].Add(_reflectedPoints[i]);
+            }
+        }
+        return _paths;
+    }
+
+    private Vector2Int[] GetReflectedPoints(Vector2Int _point)
+    {
+        Vector2Int[] _points = new Vector2Int[4];
+
+        _points[0] = _point;
+        _points[1] = new Vector2Int(roomBoundarySize.x - 1 - _point.x, _point.y);
+        _points[2] = new Vector2Int(roomBoundarySize.x - 1 - _point.x, roomBoundarySize.y - 1 - _point.y);
+        _points[3] = new Vector2Int(_point.x, roomBoundarySize.y - 1 - _point.y);
+
+        return _points;
     }
 
     private void CreateRoomWallsVisuals()
@@ -80,7 +161,7 @@ public class RoomGen : MathfExtras {
         {
             for (int x = 0; x < roomBoundarySize.x; x++)
             {
-                if(roomData[x,y] >= 1)
+                if (roomData[x, y] >= 1)
                 {
                     Transform _wallParent = Instantiate(GameManager.roomGenerationFields.wallsParentsGO, new Vector3(x, y, 0) * GameManager.roomGenerationFields.roomScale, Quaternion.identity, this.transform).transform;
                     visualsTransforms[x, y] = _wallParent;
@@ -104,13 +185,11 @@ public class RoomGen : MathfExtras {
 
     private void ClearRoomVisuals()
     {
-        Debug.Log(visualsTransforms);
         if (visualsTransforms != null)
         {
-            Debug.Log("Deleting");
-            for (int y = 0; y < visualsTransforms.GetLength(1) ; y++)
+            for (int y = 0; y < visualsTransforms.GetLength(1); y++)
             {
-                for (int x = 0; x < visualsTransforms.GetLength(0) ; x++)
+                for (int x = 0; x < visualsTransforms.GetLength(0); x++)
                 {
                     if (visualsTransforms[x, y] != null) Destroy(visualsTransforms[x, y].gameObject);//
                 }
@@ -121,13 +200,25 @@ public class RoomGen : MathfExtras {
         floorLockDownButtons = new List<Transform>();
     }
 
+    private void ClearEnemies()
+    {
+        if (enemyTransforms != null)
+        {
+            for (int i = 0; i < enemyTransforms.Count; i++)
+            {
+                Destroy(enemyTransforms[i].gameObject);
+            }
+        }
+        enemyTransforms = new List<Transform>();
+    }
+
     private void RemoveInaccessibleAreas()
     {
         for (int y = 0; y < roomBoundarySize.y; y++)
         {
             for (int x = 0; x < roomBoundarySize.x; x++)
             {
-                if(roomDijkstraMap[x,y] == 10000)
+                if (roomDijkstraMap[x, y] == 10000)
                 {
                     roomData[x, y] = -1;
                 }
@@ -196,12 +287,12 @@ public class RoomGen : MathfExtras {
         for (int i = 0; i < _count; i++)
         {
             Vector2Int _coord = GetRandomPOICandidateLocation();
-            
+
             roomData[_coord.x, _coord.y] = 11;
             int _rot = 0;
-            if (roomData[_coord.x +1, _coord.y] == 0) _rot = 1;
+            if (roomData[_coord.x + 1, _coord.y] == 0) _rot = 1;
             else if (roomData[_coord.x, _coord.y - 1] == 0) _rot = 2;
-            else if (roomData[_coord.x -1, _coord.y ] == 0) _rot = 3;
+            else if (roomData[_coord.x - 1, _coord.y] == 0) _rot = 3;
 
             floorPorts.Add(Instantiate(GameManager.roomGenerationFields.floorPortGo, new Vector2(_coord.x * GameManager.roomGenerationFields.roomScale, _coord.y * GameManager.roomGenerationFields.roomScale), Quaternion.Euler(Vector3.forward * -90 * _rot), this.transform).transform);
             visualsTransforms[_coord.x, _coord.y] = floorPorts[i];
@@ -261,9 +352,9 @@ public class RoomGen : MathfExtras {
                 roomData[x, y] = 1;
             }
         }
-        for (int y = 0; y < regionSize.y ; y++)
+        for (int y = 0; y < regionSize.y; y++)
         {
-            for (int x = 0; x < regionSize.x ; x++)
+            for (int x = 0; x < regionSize.x; x++)
             {
                 roomData[x, y] += regionData[x, y];
                 roomData[roomBoundarySize.x - x - 1, y] += regionData[x, y];
@@ -338,7 +429,7 @@ public class RoomGen : MathfExtras {
         int _wallCount = 0;
         for (int dy = -1; dy <= 1; dy++)//change <= to < for ruin generation
         {
-            if (y + dy < 0 || y + dy >= roomBoundarySize.y) _wallCount+= 3; //Do nothing
+            if (y + dy < 0 || y + dy >= roomBoundarySize.y) _wallCount += 3; //Do nothing
             else
             {
                 for (int dx = -1; dx <= 1; dx++)//change <= to < for ruin generation
@@ -362,16 +453,20 @@ public class RoomGen : MathfExtras {
 
         center = new Vector2Int((roomBoundarySize.x - 1) / 2, (roomBoundarySize.y - 1) / 2);
         poi = new List<Vector3Int>();
-        poi.Add(new Vector3Int(center.x,center.y,0));
+        poi.Add(new Vector3Int(center.x, center.y, 0));
+
+        guardCount = RandomValue(GameManager.roomGenerationFields.guardCount);
+        guardPatrolPathNodeCount = RandomValue(GameManager.roomGenerationFields.guardPatrolPathNodeCount);
+        IsAlert = false;
     }
 
     private void GenerateNewRegion()
     {
         regionData = new int[regionSize.x, regionSize.y];
 
-        for (int y = 0; y < regionSize.y ; y++)
+        for (int y = 0; y < regionSize.y; y++)
         {
-            for (int x = 0; x < regionSize.x ; x++)
+            for (int x = 0; x < regionSize.x; x++)
             {
                 regionData[x, y] = 0;
             }
@@ -388,7 +483,7 @@ public class RoomGen : MathfExtras {
         Vector2Int _pos2 = GetRandomPosInRegion();
         int _tempInt;
 
-        if(_pos1.x > _pos2.x)
+        if (_pos1.x > _pos2.x)
         {
             _tempInt = _pos1.x;
             _pos1.x = _pos2.x;
@@ -405,7 +500,7 @@ public class RoomGen : MathfExtras {
         {
             for (int x = _pos1.x; x < _pos2.x; x++)
             {
-                regionData[x,y]++;
+                regionData[x, y]++;
             }
         }
 
@@ -418,7 +513,6 @@ public class RoomGen : MathfExtras {
 
     private void CreateDijkstraMap()// Vector3Int(x,y, value)
     {
-
         dijkstraPointsToCheck = new List<Vector2Int>();
         roomDijkstraMap = new int[roomBoundarySize.x, roomBoundarySize.y];
 
@@ -443,21 +537,23 @@ public class RoomGen : MathfExtras {
 
     private void DijkstraFloodToAdjacentCell(Vector2Int _coord)
     {
-        if(roomData[_coord.x,_coord.y] != 0)
+        if (roomDijkstraMap[_coord.x, _coord.y] != 0 && roomData[_coord.x, _coord.y] != 0)
         {
             roomDijkstraMap[_coord.x, _coord.y] = -9999;
             return;
+
         }
-        else if (roomData[_coord.x, _coord.y] == 0)
+
+        if (roomData[_coord.x, _coord.y] == 0)
         {
-            if(roomDijkstraMap[_coord.x,_coord.y +1] > roomDijkstraMap[_coord.x, _coord.y] + 1)
+            if (roomDijkstraMap[_coord.x, _coord.y + 1] > roomDijkstraMap[_coord.x, _coord.y] + 1)
             {
                 dijkstraPointsToCheck.Add(new Vector2Int(_coord.x, _coord.y + 1));
                 roomDijkstraMap[_coord.x, _coord.y + 1] = roomDijkstraMap[_coord.x, _coord.y] + 1;
             }
             if (roomDijkstraMap[_coord.x - 1, _coord.y] > roomDijkstraMap[_coord.x, _coord.y] + 1)
             {
-                dijkstraPointsToCheck.Add(new Vector2Int(_coord.x -1, _coord.y));
+                dijkstraPointsToCheck.Add(new Vector2Int(_coord.x - 1, _coord.y));
                 roomDijkstraMap[_coord.x - 1, _coord.y] = roomDijkstraMap[_coord.x, _coord.y] + 1;
             }
             if (roomDijkstraMap[_coord.x + 1, _coord.y] > roomDijkstraMap[_coord.x, _coord.y] + 1)
@@ -470,15 +566,76 @@ public class RoomGen : MathfExtras {
                 dijkstraPointsToCheck.Add(new Vector2Int(_coord.x, _coord.y - 1));
                 roomDijkstraMap[_coord.x, _coord.y - 1] = roomDijkstraMap[_coord.x, _coord.y] + 1;
             }
-        }        
+
+        }
     }
 
-    public Vector2Int ToRoomIndexLocation(Vector3 _position)
+    private void CreateReverseDijkstraMap()
     {
-        _position -= this.transform.position;
+        dijkstraPointsToCheck = new List<Vector2Int>();
+        roomReverseDijkstraMap = new int[roomBoundarySize.x, roomBoundarySize.y];
 
-        int x = Mathf.RoundToInt(_position.x / GameManager.roomGenerationFields.roomScale);
-        int y = Mathf.RoundToInt(_position.y / GameManager.roomGenerationFields.roomScale);
-        return new Vector2Int(x, y);
+        for (int y = 0; y < roomBoundarySize.y; y++)
+        {
+            for (int x = 0; x < roomBoundarySize.x; x++)
+            {
+                roomReverseDijkstraMap[x, y] = 0;
+            }
+        }
+        for (int i = 0; i < enemyTransforms.Count; i++)
+        {
+            Vector2Int _enemyIndexLot = ToRoomIndexLocation(enemyTransforms[i].position);
+            roomReverseDijkstraMap[_enemyIndexLot.x, _enemyIndexLot.y] = 12;
+            dijkstraPointsToCheck.Add(new Vector2Int(_enemyIndexLot.x, _enemyIndexLot.y));
+        }
+        while (dijkstraPointsToCheck.Count > 0)
+        {
+            DijkstraReverseFloodToAdjacentCell(dijkstraPointsToCheck[0]);
+            dijkstraPointsToCheck.RemoveAt(0);
+        }
+    }
+
+    private void DijkstraReverseFloodToAdjacentCell(Vector2Int _coord)
+    {
+        if (roomData[_coord.x, _coord.y] != 0 || roomReverseDijkstraMap[_coord.x, _coord.y] == 0) return;
+
+        else
+        {
+            if (roomReverseDijkstraMap[_coord.x, _coord.y + 1]  + 1 < roomReverseDijkstraMap[_coord.x, _coord.y])
+            {
+                dijkstraPointsToCheck.Add(new Vector2Int(_coord.x, _coord.y + 1));
+                roomReverseDijkstraMap[_coord.x, _coord.y + 1] = roomReverseDijkstraMap[_coord.x, _coord.y] - 1;
+            }
+            if (roomDijkstraMap[_coord.x - 1, _coord.y] + 1 < roomDijkstraMap[_coord.x, _coord.y])
+            {
+                dijkstraPointsToCheck.Add(new Vector2Int(_coord.x - 1, _coord.y));
+                roomReverseDijkstraMap[_coord.x - 1, _coord.y] = roomReverseDijkstraMap[_coord.x, _coord.y] - 1;
+            }
+            if (roomReverseDijkstraMap[_coord.x + 1, _coord.y] + 1 < roomReverseDijkstraMap[_coord.x, _coord.y])
+            {
+                dijkstraPointsToCheck.Add(new Vector2Int(_coord.x + 1, _coord.y));
+                roomReverseDijkstraMap[_coord.x + 1, _coord.y] = roomReverseDijkstraMap[_coord.x, _coord.y] - 1;
+            }
+            if (roomReverseDijkstraMap[_coord.x, _coord.y - 1] + 1 < roomReverseDijkstraMap[_coord.x, _coord.y])
+            {
+                dijkstraPointsToCheck.Add(new Vector2Int(_coord.x, _coord.y - 1));
+                roomReverseDijkstraMap[_coord.x, _coord.y - 1] = roomReverseDijkstraMap[_coord.x, _coord.y] - 1;
+            }
+
+        }
+    }
+
+    private void MergeDijkstraMap()
+    {
+        roomMainDijkstraMap = new int[roomBoundarySize.x, roomBoundarySize.y];
+        for (int y = 0; y < roomBoundarySize.y; y++)
+        {
+            for (int x = 0; x < roomBoundarySize.x; x++)
+            {
+                roomMainDijkstraMap[x,y] = roomReverseDijkstraMap[x, y] + roomDijkstraMap[x,y];
+            }
+        }
     }
 }
+
+

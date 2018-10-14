@@ -217,6 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bbfcea375e4a843b260bad5f3778f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  I_dijkstraUpdateInterval: 0
   I_squaredGameBoundaryDist: 324
   I_bHGenerationFields:
     bulletFamilySpawnerGO: {fileID: 1656896219143334, guid: 3754df2663a20ef4da3784abf5abeb0e,
@@ -266,6 +267,9 @@ MonoBehaviour:
     chunkPerRegionCount: {x: 0, y: 0}
     centerFlipRadius: {x: 0, y: 0}
     wallDigIterationCount: {x: 0, y: 0}
+    guardGO: {fileID: 0}
+    guardCount: {x: 0, y: 0}
+    guardPatrolPathNodeCount: {x: 0, y: 0}
 --- !u!4 &899936669
 Transform:
   m_ObjectHideFlags: 0
@@ -317,6 +321,14 @@ Prefab:
     - target: {fileID: 4053782110171122, guid: 5821487beced6f6438a691f17ef89369, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053782110171122, guid: 5821487beced6f6438a691f17ef89369, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053782110171122, guid: 5821487beced6f6438a691f17ef89369, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5821487beced6f6438a691f17ef89369, type: 2}

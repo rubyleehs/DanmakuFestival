@@ -20,4 +20,17 @@ public class RoomGenerationFields{
     public Vector2Int chunkPerRegionCount;
     public Vector2Int centerFlipRadius;
     public Vector2Int wallDigIterationCount;
+
+    public GameObject guardGO;
+    public Vector2Int guardCount;
+    public Vector2Int guardPatrolPathNodeCount;
+
+    public Material wallMat;
+    public Color wallCoolColor;
+    public Color wallAlertColor;
+
+    public Color moveColor;
+    public Color warningColor;
+    public Color dangerColor;
+    public Color infoColor;
 }

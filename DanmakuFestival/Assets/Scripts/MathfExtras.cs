@@ -57,4 +57,17 @@ public abstract class MathfExtras : MonoBehaviour
     {
         return Random.Range(_range.x, _range.y);
     }
+
+    public float GetLookRotAngle(Vector2 _from, Vector2 _to)
+    {
+        Vector2 _dir = new Vector2(_to.x - _from.x, _to.y - _from.y);
+        float _lookRotAngle = Mathf.Rad2Deg * Mathf.Atan(_dir.y / _dir.x) + 90;
+        if (_dir.x == 0)
+        {
+            if (_dir.y > 0) _lookRotAngle = 0;
+            else _lookRotAngle = 180;
+        }
+        if (_dir.x > 0) _lookRotAngle += 180;
+        return _lookRotAngle;
+    }
 }
