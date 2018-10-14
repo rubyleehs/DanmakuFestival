@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RoomGen : PathFinder {
 
+    public bool IsActive = false;
     public bool IsAlert = false;
 
     //======== Start Values ========
@@ -38,12 +39,14 @@ public class RoomGen : PathFinder {
     private void Start()
     {
         room = this;
+        IsActive = false;
         GenerateNewRoom();
-        EnterRoom();
+        //EnterRoom();
     }
 
     private void Update()
     {
+        if (!IsActive) return;
         timeSinceLastDijkstraUpdate += Time.deltaTime * GameManager.timeScale;
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -63,10 +66,17 @@ public class RoomGen : PathFinder {
     }
     private void EnterRoom()
     {
+        IsActive = true;
         PlayerManager.player.position = new Vector3(center.x, center.y, 0) * GameManager.roomGenerationFields.roomScale;
         Camera.main.transform.position = new Vector3(center.x, center.y, 0) * GameManager.roomGenerationFields.roomScale + Vector3.forward * -10;
         //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), !IsAlert);
     }
+
+    private void ExitRoom()
+    {
+        IsActive = false;
+    }
+
     private void GenerateNewRoom()//
     {
         ClearEnemies();
@@ -115,9 +125,9 @@ public class RoomGen : PathFinder {
 
             for (int i = 0; i < 4; i++)
             {
-                GuardAI _guard = Instantiate(GameManager.roomGenerationFields.guardGO, (Vector2)_guardPatrolPaths[i][0] * GameManager.roomGenerationFields.roomScale, Quaternion.identity, this.transform).transform.GetComponent<GuardAI>();
+                GuardAI _guard = Instantiate(GameManager.roomGenerationFields.guardGO, (Vector2)_guardPatrolPaths[i][0] * GameManager.roomGenerationFields.roomScale + (Vector2)this.transform.position, Quaternion.identity, this.transform).transform.GetComponent<GuardAI>();
                 ////_guard.patrolIndex = _guardPatrolPaths[i].Count * i / 4;
-                _guard.transform.position = (Vector2)_guardPatrolPaths[i][_guard.patrolIndex] * GameManager.roomGenerationFields.roomScale;
+                _guard.transform.position = (Vector2)_guardPatrolPaths[i][_guard.patrolIndex] * GameManager.roomGenerationFields.roomScale + (Vector2)this.transform.position;
                 _guard.patrolPath = _guardPatrolPaths[i];
                 _guard.room = this;
                 enemyTransforms.Add(_guard.transform);
@@ -163,7 +173,7 @@ public class RoomGen : PathFinder {
             {
                 if (roomData[x, y] >= 1)
                 {
-                    Transform _wallParent = Instantiate(GameManager.roomGenerationFields.wallsParentsGO, new Vector3(x, y, 0) * GameManager.roomGenerationFields.roomScale, Quaternion.identity, this.transform).transform;
+                    Transform _wallParent = Instantiate(GameManager.roomGenerationFields.wallsParentsGO, new Vector3(x, y, 0) * GameManager.roomGenerationFields.roomScale + this.transform.position, Quaternion.identity, this.transform).transform;
                     visualsTransforms[x, y] = _wallParent;
                     if (roomData[x, y] == 1) Instantiate(GameManager.roomGenerationFields.wallsColumnGO, _wallParent);
                     else
@@ -294,7 +304,7 @@ public class RoomGen : PathFinder {
             else if (roomData[_coord.x, _coord.y - 1] == 0) _rot = 2;
             else if (roomData[_coord.x - 1, _coord.y] == 0) _rot = 3;
 
-            floorPorts.Add(Instantiate(GameManager.roomGenerationFields.floorPortGo, new Vector2(_coord.x * GameManager.roomGenerationFields.roomScale, _coord.y * GameManager.roomGenerationFields.roomScale), Quaternion.Euler(Vector3.forward * -90 * _rot), this.transform).transform);
+            floorPorts.Add(Instantiate(GameManager.roomGenerationFields.floorPortGo, new Vector2(_coord.x * GameManager.roomGenerationFields.roomScale, _coord.y * GameManager.roomGenerationFields.roomScale) + (Vector2)this.transform.position, Quaternion.Euler(Vector3.forward * -90 * _rot), this.transform).transform);
             visualsTransforms[_coord.x, _coord.y] = floorPorts[i];
         }
     }
@@ -311,7 +321,7 @@ public class RoomGen : PathFinder {
             else if (roomData[_coord.x, _coord.y - 1] == 0) _rot = 2;
             else if (roomData[_coord.x - 1, _coord.y] == 0) _rot = 3;
 
-            floorLockDownButtons.Add(Instantiate(GameManager.roomGenerationFields.floorLockDownButtonGO, new Vector2(_coord.x * GameManager.roomGenerationFields.roomScale, _coord.y * GameManager.roomGenerationFields.roomScale), Quaternion.Euler(Vector3.forward * -90 * _rot), this.transform).transform);
+            floorLockDownButtons.Add(Instantiate(GameManager.roomGenerationFields.floorLockDownButtonGO, (Vector2)_coord * GameManager.roomGenerationFields.roomScale + (Vector2)this.transform.position, Quaternion.Euler(Vector3.forward * -90 * _rot), this.transform).transform);
             visualsTransforms[_coord.x, _coord.y] = floorLockDownButtons[i];//
         }
     }

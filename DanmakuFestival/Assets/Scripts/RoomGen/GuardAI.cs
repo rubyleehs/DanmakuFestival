@@ -30,6 +30,7 @@ public class GuardAI : PathFinder {
 
     private void Update()
     {
+        if (!room.IsActive) return;
         curIndexLocation = ToRoomIndexLocation(this.transform.position);
         if(room.IsAlert) targetMovePos = GetAlertedMovePosition(curIndexLocation);
         else
@@ -43,6 +44,7 @@ public class GuardAI : PathFinder {
 
     private void FixedUpdate()
     {
+        if (!room.IsActive) return;
         curAngle = GetLookRotAngle(this.transform.position, targetMovePos);
         this.transform.localRotation = Quaternion.Euler(Vector3.forward * (curAngle));
         if (room.IsAlert)

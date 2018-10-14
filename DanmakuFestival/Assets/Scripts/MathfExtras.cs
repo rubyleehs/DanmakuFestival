@@ -70,4 +70,35 @@ public abstract class MathfExtras : MonoBehaviour
         if (_dir.x > 0) _lookRotAngle += 180;
         return _lookRotAngle;
     }
+
+    public Vector2[] GetPointsAroundOrigin(Vector2 _origin, int _noOfPoints, float _radius, float _maxAngleHalfSpread, float _centerAngle)
+    {
+        float _angularDiff = 2f * _maxAngleHalfSpread / _noOfPoints;
+
+        Vector2[] _points = new Vector2[_noOfPoints];
+
+        for (int i = 0; i < _noOfPoints; i++)
+        {
+            _points[i] = AlterVector(Vector3.up * _radius, _centerAngle - _maxAngleHalfSpread + i * _angularDiff);
+            _points[i] += _origin;
+        }
+
+        return _points;
+    }
+
+    public Vector3[] GetPointsPlusLookRotAroundOrigin(Vector2 _origin, int _noOfPoints, float _radius, float _maxAngleHalfSpread, float _centerAngle)
+    {
+        float _angularDiff = 2f * _maxAngleHalfSpread / _noOfPoints;
+
+        Vector3[] _points = new Vector3[_noOfPoints];
+
+        for (int i = 0; i < _noOfPoints; i++)
+        {
+            _points[i] = AlterVector(Vector3.up * _radius, _centerAngle - _maxAngleHalfSpread + i * _angularDiff);
+            _points[i] += (Vector3)_origin;
+            _points[i].z = _centerAngle - _maxAngleHalfSpread + i * _angularDiff;
+        }
+
+        return _points;
+    }
 }

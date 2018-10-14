@@ -6,6 +6,9 @@ using UnityEngine;
 [System.Serializable]
 public class RoomGenerationFields{
 
+    public GameObject roomGO;
+    public GameObject layerGO;
+
     public GameObject wallsParentsGO;
     public GameObject wallsColumnGO;
     public GameObject wallsWallsGO;
@@ -13,7 +16,13 @@ public class RoomGenerationFields{
     public GameObject floorPortGo;
     public GameObject floorLockDownButtonGO;
 
-    public Vector2Int numberOfRooms;
+    public float distanceBetweenLayers;
+    public Vector2Int numberOfLayers;
+    public Vector2Int[] numberOfRoomsAtLayer;
+
+    
+    public Vector2 layerRotSpeed;
+    public float revealRoomRadius;
 
     public float roomScale;
 
